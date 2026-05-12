@@ -50,7 +50,7 @@ export async function fetchXbox(env: Env): Promise<Gaming | null> {
 
   const statsRes = await fetch(ENDPOINTS.stats(title.titleId), { headers: headers(env) }).catch(() => null);
   if (!statsRes || !statsRes.ok) return null;
-  const stats = (await statsRes.json()) as { content: { statlistscollection: { stats: { name: string; value: string }[] } } };
+  const stats = (await statsRes.json()) as { content: { statlistscollection: { stats: { name: string; value: string }[] }[] } };
 
   return {
     isPlaying: !!live,
@@ -58,6 +58,6 @@ export async function fetchXbox(env: Env): Promise<Gaming | null> {
     game: title.name,
     cover: { url: title.displayImageUrl, width: null, height: null },
     lastPlayedAt: live ? null : title.titleHistory.lastTimePlayed,
-    playtimeMinutes: parseInt(stats.content.statlistscollection.stats.find((s) => s.name === "MinutesPlayed")?.value ?? "0", 10),
+    playtimeMinutes: parseInt(stats.content.statlistscollection[0]?.stats.find((s) => s.name === "MinutesPlayed")?.value ?? "0", 10),
   };
 }
