@@ -1,6 +1,7 @@
 import { DurableObject } from "cloudflare:workers";
 import { fetchSpotify } from "./services/spotify";
 import { fetchGaming } from "./services/gaming";
+import { fetchLetterboxd } from "./services/letterboxd";
 import type { CachedEntry, RouteConfig } from "./types";
 
 const ROUTES: Record<string, RouteConfig> = {
@@ -11,6 +12,10 @@ const ROUTES: Record<string, RouteConfig> = {
   gaming: {
     ttl: 1_000 * 90, // 90s
     fetch: (env, storage) => fetchGaming(env, storage),
+  },
+  letterboxd: {
+    ttl: 1_000 * 60 * 60, // 1hr
+    fetch: (env, storage) => fetchLetterboxd(env, storage),
   },
 };
 
