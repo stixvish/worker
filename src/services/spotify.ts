@@ -49,6 +49,7 @@ interface SpotifyResponse {
   artists: { name: string; url: string }[];
   album: { name: string; url: string; cover: { url: string; width: number; height: number } };
   context: { type: string; name: string; url: string; cover: { url: string; width: number | null; height: number | null } } | null;
+  progress?: { positionMs: number; durationMs: number; timestamp: number };
 }
 
 async function fetchAccessToken(env: Env, storage: DurableObjectStorage): Promise<string> {
@@ -200,6 +201,9 @@ export async function fetchSpotify(env: Env, storage: DurableObjectStorage): Pro
     };
     if (track.context) {
       data.context = await fetchContext(track.item, track.context, accessToken);
+    }
+    if (track.is_playing) {
+      data.progress = { positionMs: track.progress_ms, durationMs: track.item.duration_ms, timestamp: track.timestamp };
     }
     return data;
   }
