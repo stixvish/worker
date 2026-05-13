@@ -27,12 +27,7 @@ export class APICache extends DurableObject<Env> {
       return Response.json(cached.data);
     }
     // if not, fetch new data, cache it, and return it
-    let data: unknown;
-    try {
-      data = await config.fetch(this.env, this.ctx.storage);
-    } catch {
-      return new Response("upstream fetch failed", { status: 500 });
-    }
+    const data = await config.fetch(this.env, this.ctx.storage);
     await this.ctx.storage.put(route, {
       data,
       expiresAt: Date.now() + config.ttl,

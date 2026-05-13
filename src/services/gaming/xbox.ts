@@ -15,19 +15,18 @@ async function fetchPresence(env: Env) {
   if (!res || !res.ok) return null;
 
   const data = (await res.json()) as {
-    content: { state: "Online" | "Offline" };
-    devices: { type: string; titles: { id: string; name: string }[] }[];
+    content: { state: "Online" | "Offline"; devices: { titles: { id: string; name: string; placement: string }[] }[] };
   };
   if (data.content.state === "Offline") return null;
 
-  const device = data.devices.find((d) => d.type === "XboxOne" || d.type === "XboxSeriesX");
-  if (!device) return null;
+  const activeTitle = data.content.devices?.flatMap((d) => d.titles).find((t) => t.placement === "Full");
+  if (!activeTitle) return null;
 
   return {
     isPlaying: true,
     platform: "xbox",
-    game: device.titles[0]?.name ?? "Unknown",
-    titleId: device.titles[0]?.id,
+    game: activeTitle.name,
+    titleId: activeTitle.id,
   };
 }
 
@@ -56,7 +55,7 @@ export async function fetchXbox(env: Env): Promise<Gaming | null> {
     isPlaying: !!live,
     platform: "xbox",
     game: title.name,
-    cover: { url: title.displayImage.replace("http://", "https://"), width: null, height: null },
+    cover: { url: (title.displayImage ?? "").replace("http://", "https://"), width: null, height: null },
     lastPlayedAt: live ? null : title.titleHistory.lastTimePlayed,
     playtimeMinutes: parseInt(stats.content.statlistscollection[0]?.stats.find((s) => s.name === "MinutesPlayed")?.value ?? "0", 10),
   };
