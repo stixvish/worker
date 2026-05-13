@@ -37,7 +37,7 @@ export async function fetchXbox(env: Env): Promise<Gaming | null> {
   const titlesRes = await fetch(ENDPOINTS.titles, { headers: headers(env) }).catch(() => null);
   if (!titlesRes || !titlesRes.ok) return null;
   const titlesData = (await titlesRes.json()) as {
-    content: { titles: { titleId: string; name: string; displayImageUrl: string; titleHistory: { lastTimePlayed: string } }[] };
+    content: { titles: { titleId: string; name: string; displayImage: string; titleHistory: { lastTimePlayed: string } }[] };
   };
   if (titlesData.content.titles.length === 0) return null;
 
@@ -56,7 +56,7 @@ export async function fetchXbox(env: Env): Promise<Gaming | null> {
     isPlaying: !!live,
     platform: "xbox",
     game: title.name,
-    cover: { url: title.displayImageUrl, width: null, height: null },
+    cover: { url: title.displayImage, width: null, height: null },
     lastPlayedAt: live ? null : title.titleHistory.lastTimePlayed,
     playtimeMinutes: parseInt(stats.content.statlistscollection[0]?.stats.find((s) => s.name === "MinutesPlayed")?.value ?? "0", 10),
   };
