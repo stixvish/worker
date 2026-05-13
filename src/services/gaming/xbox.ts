@@ -56,7 +56,7 @@ export async function fetchXbox(env: Env): Promise<Gaming | null> {
     isPlaying: !!live,
     platform: "xbox",
     game: title.name,
-    cover: { url: title.displayImage, width: null, height: null },
+    cover: { url: title.displayImage.replace("http://", "https://"), width: null, height: null },
     lastPlayedAt: live ? null : title.titleHistory.lastTimePlayed,
     playtimeMinutes: parseInt(stats.content.statlistscollection[0]?.stats.find((s) => s.name === "MinutesPlayed")?.value ?? "0", 10),
   };
