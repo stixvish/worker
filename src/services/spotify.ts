@@ -203,7 +203,7 @@ export async function fetchSpotify(env: Env, storage: DurableObjectStorage): Pro
       data.context = await fetchContext(track.item, track.context, accessToken);
     }
     if (track.is_playing) {
-      data.progress = { positionMs: track.progress_ms, durationMs: track.item.duration_ms, timestamp: track.timestamp };
+      data.progress = { positionMs: track.progress_ms, durationMs: track.item.duration_ms, timestamp: Date.now() };
     }
     return data;
   }
