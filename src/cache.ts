@@ -6,7 +6,7 @@ import type { CachedEntry, RouteConfig } from "./types";
 
 const ROUTES: Record<string, RouteConfig> = {
   spotify: {
-    ttl: 1_000 * 30, // 30s
+    ttl: 1_000 * 45, // 45s
     fetch: (env, storage) => fetchSpotify(env, storage),
   },
   gaming: {
